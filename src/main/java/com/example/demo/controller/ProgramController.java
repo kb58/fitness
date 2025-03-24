@@ -25,26 +25,26 @@ public class ProgramController {
 
     // Everyone can view programs
     @GetMapping("/{id}")
-    @PreAuthorize("hasAnyAuthority('admin:read', 'trainer:read', 'user')")
+    @PreAuthorize("hasAnyAuthority('admin:read', 'trainer:read') or hasRole('USER')")
     public ResponseEntity<ProgramDTO> getProgramById(@PathVariable Long id) {
         return ResponseEntity.ok(programService.getProgramById(id));
     }
 
     // Everyone can view all programs
     @GetMapping
-    @PreAuthorize("hasAnyAuthority('admin:read', 'trainer:read', 'user')")
+    @PreAuthorize("hasAnyAuthority('admin:read', 'trainer:read') or hasRole('USER')")
     public ResponseEntity<List<ProgramDTO>> getAllPrograms() {
         return ResponseEntity.ok(programService.getAllPrograms());
     }
 
-    // Only Admin and Trainer can update
+    // Only Admin and Trainer can update programs
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyAuthority('admin:update', 'trainer:update')")
     public ResponseEntity<ProgramDTO> updateProgram(@PathVariable Long id, @RequestBody ProgramDTO programDTO) {
         return ResponseEntity.ok(programService.updateProgram(id, programDTO));
     }
 
-    // Only Admin can delete
+    // Only Admin can delete programs
     @DeleteMapping("/{id}")
     @PreAuthorize("hasAuthority('admin:delete')")
     public ResponseEntity<String> deleteProgram(@PathVariable Long id) {
