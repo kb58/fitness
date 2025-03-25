@@ -7,7 +7,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -29,24 +28,32 @@ public class SecurityConfig {
     JwtFilter jwtFilter;
     @Autowired
     UserDetailsService userDetailService;
+
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http)throws Exception{
         return http
                 .csrf(customizer->customizer.disable())
                 .authorizeHttpRequests(request->request
-                        .requestMatchers(POST,"/api/v1/auth/**")
-
-                        .permitAll()
-                        .requestMatchers(GET,"**")
-                        .permitAll()
+                        // Auth endpoints
+                        .requestMatchers(POST,"/api/v1/auth/**").permitAll()
+                        .requestMatchers(GET,"**").permitAll()
                         .requestMatchers(GET,"/api/v1/getUser/**").permitAll()
+
+                        // Admin endpoints
                         .requestMatchers("/api/v1/admin/**").hasRole(ADMIN.name())
                         .requestMatchers(GET, "/api/v1/admin/**").hasAuthority(ADMIN_READ.name())
                         .requestMatchers(POST, "/api/v1/admin/**","/api/v1/post/createPost").hasAuthority(ADMIN_CREATE.name())
                         .requestMatchers(PUT, "/api/v1/admin/**").hasAuthority(ADMIN_UPDATE.name())
                         .requestMatchers(DELETE, "/api/v1/admin/**").hasAuthority(ADMIN_DELETE.name())
-                        .anyRequest().authenticated())
-                .httpBasic(Customizer.withDefaults())
+
+                        // Milestone 3 endpoints - all permitAll for simplicity
+                        .requestMatchers("/api/communities/**").permitAll()
+                        .requestMatchers("/api/discussions/**").permitAll()
+
+                        // All other requests
+                        .anyRequest().permitAll())
+                // Remove httpBasic to eliminate the sign-in popup
+                //.httpBasic(Customizer.withDefaults())
                 .sessionManagement(session->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
@@ -66,5 +73,3 @@ public class SecurityConfig {
         return config.getAuthenticationManager();
     }
 }
-
-

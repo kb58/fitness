@@ -76,6 +76,12 @@
 		<!--			<version>0.9.1</version>-->
 		<!--		</dependency>-->
 		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>1.18.30</version> <!-- Use the latest version -->
+			<optional>true</optional>
+		</dependency>
+		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>
 			<version>3.1.5</version>
@@ -89,6 +95,12 @@
 			<groupId>io.jsonwebtoken</groupId>
 			<artifactId>jjwt-impl</artifactId>
 			<version>0.12.6</version>
+		</dependency>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+			<version>1.18.30</version> <!-- or the version compatible with your Spring Boot -->
+			<optional>true</optional>
 		</dependency>
 		<dependency>
 			<groupId>io.jsonwebtoken</groupId>
